@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MeuTodo.Data;
 using MeuTodo.Dtos;
@@ -63,7 +62,29 @@ namespace MeuTodo.Controllers
                 return BadRequest();
             }
 
+        }
+        [HttpPut("todos/{id}")]
+        public async Task<IActionResult> PutAsync([FromServices] AppDbContext context, [FromRoute] int id, [FromBody] UpdateTodoDTO dto)
+        {
+            if (!ModelState.IsValid) return BadRequest();
 
+            var todo = await context.Todos.FirstOrDefaultAsync(x => x.Id == id);
+            if (todo == null) return NotFound();
+
+
+            try
+            {
+                todo.Done = dto.Done;
+                todo.Title = dto.Title;
+                context.Todos.Update(todo);
+                await context.SaveChangesAsync();
+                return Ok(todo);
+            }
+            catch (System.Exception)
+            {
+
+                return BadRequest();
+            }
         }
     }
 }
