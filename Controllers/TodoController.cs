@@ -74,7 +74,6 @@ namespace MeuTodo.Controllers
 
             try
             {
-                todo.Done = dto.Done;
                 todo.Title = dto.Title;
                 context.Todos.Update(todo);
                 await context.SaveChangesAsync();
@@ -85,6 +84,25 @@ namespace MeuTodo.Controllers
 
                 return BadRequest();
             }
+        }
+        [HttpDelete("todos/{id}")]
+        public async Task<IActionResult> DeleteAsync([FromServices] AppDbContext context, [FromRoute] int id)
+        {
+            var todo = await context.Todos.FirstOrDefaultAsync(x => x.Id == id);
+            if (todo == null) return NotFound();
+
+            try
+            {
+                context.Todos.Remove(todo);
+                await context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (System.Exception)
+            {
+
+                return BadRequest();
+            }
+
         }
     }
 }

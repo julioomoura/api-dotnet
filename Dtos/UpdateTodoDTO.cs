@@ -6,7 +6,5 @@ namespace MeuTodo.Dtos
     {
         [Required]
         public string Title { get; set; }
-        [Required]
-        public bool Done { get; set; }
     }
 }
